@@ -1,9 +1,9 @@
-@RaffleCtrl = ($scope) -> 
-	$scope.entries = [
-		{name: "Barry"}
-		{name: "Max"}
-		{name: "Sannidhi"}
-	]
+app = angular.module("Raffler", ["ngResource"]) # ngResource is dependency of this module
+
+@RaffleCtrl = ($scope, $resource) -> 
+	Entry = $resource("/entries/:id", {id: "@id"}, {update:{method: "PUT"}})
+	$scope.entries = Entry.query()
+
 	$scope.addEntry = ->
 		$scope.entries.push($scope.newEntry)
 		$scope.newEntry = {}
