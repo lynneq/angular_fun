@@ -1,2 +1,4 @@
+Raffler
+
 Angular references:
 http://docs.angularjs.org/api/ngResource.$resource

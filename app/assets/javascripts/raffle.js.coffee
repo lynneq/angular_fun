@@ -3,9 +3,10 @@ app = angular.module("Raffler", ["ngResource"])
 app.config ["$httpProvider", (provider) ->
   provider.defaults.headers.common['X-CSRF-Token'] = csrf_token
 ]
+app.factory "Entry", [ "$resource", ($resource) ->
+	$resource("/entries/:id", {id: "@id"}, {update: {method: "PUT"}})
 
-@RaffleCtrl = ($scope, $resource) -> 
-	Entry = $resource("/entries/:id", {id: "@id"}, {update: {method: "PUT"}})
+@RaffleCtrl = ["$scope", "Entry", ($scope, Entry)] -> 
 	$scope.entries = Entry.query()
 
 	$scope.addEntry = ->
