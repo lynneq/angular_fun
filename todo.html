@@ -1,0 +1,79 @@
+<html ng-app="toDoApp">
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/momentjs/2.1.0/moment.min.js"></script>
+		<script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+		<link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+		<!-- you need <script></script> complete tag, otherwise html doesn't like it -->
+	</head>
+	<body ng-controller="TODOCtrl">
+		<div class="container">
+		<h3 class="lead">My to-do list</h3>
+		<ul class="table table-bordered table-striped">
+			<li ng-repeat="item in list">
+				<span ng-bind="item.desc" class="done-{{item.done}}"></span>
+			<!-- <input type="button" value="-" ng-click="removeItem($index)" class="todo-destroy"></input> -->
+				<span class="todo-destroy"><i class="icon-remove icon-large" ng-click="removeItem($index)"></i></span>
+				<input type="checkbox" ng-model="item.done" class="word-done">
+				<p>
+				<span ng-bind="item.time | fromNow" class="time"></span>
+			</li>
+		</ul>
+		<!--
+		<input type="textfield" ng-model="newItem"></input>
+		<input type="button" value="Add" ng-click="addItem()"></input>
+		-->
+		<input type="text" ng-model="newItem" add-on-enter="addItem(newItem)" />
+
+		</div>
+		<script>
+			var toDoAppModule = angular.module("toDoApp", []);
+			toDoAppModule.directive("addOnEnter", function () {
+					return {
+						restrict: 'A',
+						link: function (scope, element, attrs) {
+							// console.log(attrs);
+							element.bind('keypress', function (event) {
+								if (event.charCode === 13) {
+									scope.$apply(attrs.addOnEnter);
+								}
+							});
+						}
+					};
+				});
+			toDoAppModule.filter('fromNow', function() {
+				return function (time) {
+					return moment(time).fromNow();
+				};
+			});
+		TODOCtrl = function($scope){
+			$scope.list = [{
+				desc: "First thing to do!",
+				done: false, 
+				time: new Date(Math.random())
+			}];
+			$scope.addItem = function(){
+				$scope.list.push({
+					desc: $scope.newItem,
+					time: new Date()
+				});
+				$scope.newItem = "";
+			};
+			$scope.removeItem = function(index){
+				$scope.list.splice(index, 1);
+			};
+		};
+		TODOCtrl.$inject=["$scope"];
+		</script>
+		<style >
+			.done-true {
+ 		 	text-decoration: line-through;
+  			color: grey;
+			}
+			.time{
+			color: grey;
+
+			}
+		</style>
+	</body>
+</html>
